@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CircleProgressView</string>
+    <string name="title_btn_switch_color">切换渐变颜色</string>
+</resources>
