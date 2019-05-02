@@ -10,7 +10,9 @@
         android:id="@+id/progess_view"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        app:bg_color="@color/bgColor"
+        app:progress_color="@color/pgColor"/>
 
 
     <Button

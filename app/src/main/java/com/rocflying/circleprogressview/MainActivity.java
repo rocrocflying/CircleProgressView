@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         initView();
         initListener();
+        circleProgressView.setValue(80);
+
     }
 
     private void initListener() {

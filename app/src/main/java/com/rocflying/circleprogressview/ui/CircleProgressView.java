@@ -2,6 +2,7 @@ package com.rocflying.circleprogressview.ui;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,6 +15,8 @@ import android.view.Display;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
+import com.rocflying.circleprogressview.R;
+
 /**
  * 圆环进度条
  * Created by liupeng on 2019/5/2.
@@ -23,6 +26,7 @@ public class CircleProgressView extends View {
     private Context context;
     private Paint bgPaint;
     private Paint progressPaint;
+    private Paint textPaint;
 
     private int bgColor;
     private int progressColor;
@@ -42,7 +46,18 @@ public class CircleProgressView extends View {
     public CircleProgressView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
+        getAttribute(attrs);
         initPaint();
+    }
+
+    private void getAttribute(AttributeSet attrs) {
+        if (attrs == null) {
+            return;
+        }
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleProgressView);
+
+        bgColor = typedArray.getColor(R.styleable.CircleProgressView_bg_color, 0);
+        progressColor = typedArray.getColor(R.styleable.CircleProgressView_progress_color, 0);
     }
 
     public CircleProgressView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -53,20 +68,23 @@ public class CircleProgressView extends View {
 
     private void initPaint() {
         bgPaint = new Paint();
-        bgPaint.setColor(Color.GRAY);
+        bgPaint.setColor(bgColor);
         bgPaint.setStrokeWidth(dip2px(context, circleWidth));
         bgPaint.setStyle(Paint.Style.STROKE);
         bgPaint.setStrokeCap(Paint.Cap.ROUND);
         bgPaint.setAntiAlias(true);
 
         progressPaint = new Paint();
-        progressPaint.setColor(Color.RED);
+        progressPaint.setColor(progressColor);
         progressPaint.setStrokeWidth(dip2px(context, circleWidth));
         progressPaint.setStyle(Paint.Style.STROKE);
         progressPaint.setStrokeCap(Paint.Cap.ROUND);
         progressPaint.setAntiAlias(true);
 
-
+        textPaint = new Paint();
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(dip2px(context, 34));
+        textPaint.setAntiAlias(true);
     }
 
     @Override
@@ -83,6 +101,7 @@ public class CircleProgressView extends View {
         RectF rect = new RectF(getPaddingLeft() + dip2px(context, 9), getPaddingTop() + dip2px(context, 9), width - dip2px(context, 9), height - dip2px(context, 9));
         canvas.drawArc(rect, START_SWIPE_ANGLE, MAX_SWIPE_ANGLE, false, bgPaint);
         canvas.drawArc(rect, START_SWIPE_ANGLE, curSwipeAngle, false, progressPaint);
+        canvas.drawText(String.valueOf((int)curSwipeAngle), width / 2- dip2px(context, 24), height / 2, textPaint);
     }
 
     public void setValue(float percent) {
