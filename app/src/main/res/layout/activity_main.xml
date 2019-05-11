@@ -12,7 +12,9 @@
         android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         app:bg_color="@color/bgColor"
-        app:progress_color="@color/pgColor"/>
+        app:progress_color="@color/pgColor"
+        app:start_color="@color/color_F7B063"
+        app:end_color="@color/color_F5533D"/>
 
 
     <Button

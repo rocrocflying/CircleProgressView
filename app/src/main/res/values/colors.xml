@@ -6,4 +6,6 @@
 
     <color name="bgColor">#DBF1FF</color>
     <color name="pgColor">#36A8F4</color>
+    <color name="color_F7B063">#F7B063</color>
+    <color name="color_F5533D">#F5533D</color>
 </resources>

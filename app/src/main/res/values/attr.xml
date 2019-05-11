@@ -4,5 +4,7 @@
     <declare-styleable name="CircleProgressView">
         <attr name="bg_color" format="color" />
         <attr name="progress_color" format="color" />
+        <attr name="start_color" format="color"></attr>
+        <attr name="end_color" format="color"></attr>
     </declare-styleable>
 </resources>

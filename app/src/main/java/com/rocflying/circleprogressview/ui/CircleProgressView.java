@@ -36,6 +36,9 @@ public class CircleProgressView extends View {
     private final int MAX_SWIPE_ANGLE = 300;
     private final int START_SWIPE_ANGLE = 120;
 
+    private int startColor;
+    private int endColor;
+
 
     public CircleProgressView(Context context) {
         super(context);
@@ -58,12 +61,41 @@ public class CircleProgressView extends View {
 
         bgColor = typedArray.getColor(R.styleable.CircleProgressView_bg_color, 0);
         progressColor = typedArray.getColor(R.styleable.CircleProgressView_progress_color, 0);
+        startColor = typedArray.getColor(R.styleable.CircleProgressView_start_color, 0);
+        endColor = typedArray.getColor(R.styleable.CircleProgressView_end_color, 0);
     }
 
     public CircleProgressView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         initPaint();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        setMeasuredDimension(measureSize(widthMeasureSpec), measureSize(heightMeasureSpec));
+    }
+
+    private int measureSize(int measureSpec) {
+
+        int result = 0;
+        int measureMode = MeasureSpec.getMode(measureSpec);
+        int measureSize = MeasureSpec.getSize(measureSpec);
+
+        if (measureMode == MeasureSpec.EXACTLY) {
+            result = measureSize;
+
+
+        } else {
+
+            result = 300;
+            if (measureMode == MeasureSpec.AT_MOST) {
+                result = Math.min(result, measureSize);
+            }
+
+        }
+        return result;
+
     }
 
     private void initPaint() {
@@ -99,9 +131,13 @@ public class CircleProgressView extends View {
         int margin = (displayMetrics.widthPixels - getWidth()) / 2;
         int height = getMeasuredHeight();
         RectF rect = new RectF(getPaddingLeft() + dip2px(context, 9), getPaddingTop() + dip2px(context, 9), width - dip2px(context, 9), height - dip2px(context, 9));
+
         canvas.drawArc(rect, START_SWIPE_ANGLE, MAX_SWIPE_ANGLE, false, bgPaint);
-        canvas.drawArc(rect, START_SWIPE_ANGLE, curSwipeAngle, false, progressPaint);
-        canvas.drawText(String.valueOf((int)curSwipeAngle), width / 2- dip2px(context, 24), height / 2, textPaint);
+        for (int i = START_SWIPE_ANGLE; i < START_SWIPE_ANGLE + curSwipeAngle; i++) {
+            progressPaint.setColor(getCurColor((i * 1.0f / (START_SWIPE_ANGLE + curSwipeAngle)), startColor, endColor));
+            canvas.drawArc(rect, i, 1, false, progressPaint);
+        }
+        canvas.drawText(String.valueOf((int) curSwipeAngle), width / 2 - dip2px(context, 24), height / 2, textPaint);
     }
 
     public void setValue(float percent) {
@@ -124,6 +160,9 @@ public class CircleProgressView extends View {
      * 获取渐变颜色值
      */
     private int getCurColor(float frac, int startColor, int endColor) {
+        if (frac == 1) {
+            frac = 1;
+        }
         int redStart = Color.red(startColor);
         int greenStart = Color.green(startColor);
         int blueStart = Color.blue(startColor);
@@ -145,7 +184,6 @@ public class CircleProgressView extends View {
         int curAlpha = (int) (alphaStart + frac * alphaDiff);
 
         return Color.argb(curAlpha, curRed, curGreen, curBlue);
-
     }
 
     private int getSwipeColor() {
